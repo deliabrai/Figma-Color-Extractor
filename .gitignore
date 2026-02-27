@@ -1,0 +1,5 @@
+# Token personal de Figma — nunca subir al repo
+.cursor/mcp.json
+
+# macOS
+.DS_Store

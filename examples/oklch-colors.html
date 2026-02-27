@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OKLCH Color Ramps</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      --bg: #f9f9f8;
+      --surface: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #6b6b6b;
+      --border: #e5e5e3;
+      --radius: 12px;
+
+      /* ── Yellow ramp ─────────────────────────────── */
+      --yellow-50:  #FFF359;
+      --yellow-100: #FFDC3A;
+      --yellow-150: #EAC503;
+      --yellow-200: #D3AE00;
+      --yellow-250: #BD9800;
+      --yellow-300: #A78200;
+      --yellow-350: #916D00;
+      --yellow-400: #7C5800;
+      --yellow-450: #684400;
+      --yellow-500: #543000;
+      --yellow-550: #411C00;
+      --yellow-600: #2E0800;
+
+      /* ── Green ramp ──────────────────────────────── */
+      --green-50:   #A1FFA7;
+      --green-100:  #8AFD90;
+      --green-150:  #72E57A;
+      --green-200:  #5ACE63;
+      --green-250:  #41B74D;
+      --green-300:  #23A136;
+      --green-350:  #008B1D;
+      --green-400:  #007500;
+      --green-450:  #006000;
+      --green-500:  #004C00;
+      --green-550:  #003800;
+      --green-600:  #002400;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      max-width: 900px;
+      margin: 0 auto 56px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 560px;
+    }
+
+    header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .badge svg { width: 12px; height: 12px; fill: currentColor; }
+
+    .ramps { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+
+    .ramp-section {}
+
+    .ramp-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .ramp-header h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .ramp-header .meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 6px;
+    }
+
+    @media (max-width: 700px) {
+      .swatches { grid-template-columns: repeat(6, 1fr); }
+    }
+
+    .swatch {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .swatch-color {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .swatch-color { transition: none; }
+      .toast        { transition: none; }
+    }
+
+    .swatch:hover .swatch-color {
+      transform: scale(1.06) translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.14);
+    }
+
+    .swatch:focus-visible .swatch-color {
+      outline: 2px solid var(--text);
+      outline-offset: 2px;
+    }
+
+    .swatch-info {
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .swatch-step {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text);
+      display: block;
+      letter-spacing: 0.01em;
+    }
+
+    .swatch-hex {
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .swatch-oklch {
+      font-size: 0.5625rem;
+      color: #aaa;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* CSS vars panel */
+    .css-panel {
+      max-width: 900px;
+      margin: 64px auto 0;
+      background: #1a1a1a;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .css-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #2e2e2e;
+    }
+
+    .css-panel-header span {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: #ccc;
+    }
+
+    .copy-btn {
+      background: #2e2e2e;
+      border: none;
+      color: #ccc;
+      font-size: 0.75rem;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: var(--font);
+    }
+
+    .copy-btn:hover { background: #3e3e3e; color: #fff; }
+    .copy-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .copy-btn.copied { background: #1a4731; color: #4ade80; }
+
+    .css-panel pre {
+      padding: 20px;
+      font-size: 0.75rem;
+      line-height: 1.8;
+      color: #e2e2e2;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .css-panel .token-selector { color: #93c5fd; }
+    .css-panel .token-prop    { color: #c4b5fd; }
+    .css-panel .token-value   { color: #86efac; }
+    .css-panel .token-comment { color: #6b7280; }
+
+    /* Tooltip on copy */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 0.8125rem;
+      padding: 10px 20px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>OKLCH Color Ramps</h1>
+  <p>Perceptually uniform color scales generated in OKLCH color space and exported from Figma. Each ramp has 12 steps from lightest (50) to darkest (600).</p>
+  <span class="badge">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    Exported from Figma · Collection: oklch
+  </span>
+</header>
+
+<div class="ramps">
+
+  <!-- Yellow -->
+  <section class="ramp-section">
+    <div class="ramp-header">
+      <h2>Yellow</h2>
+      <span class="meta">OKLCH(L, 0.17, 95°) · 12 steps</span>
+    </div>
+    <div class="swatches" id="yellow-swatches"></div>
+  </section>
+
+  <!-- Green -->
+  <section class="ramp-section">
+    <div class="ramp-header">
+      <h2>Green</h2>
+      <span class="meta">OKLCH(L, 0.18, 145°) · 12 steps</span>
+    </div>
+    <div class="swatches" id="green-swatches"></div>
+  </section>
+
+</div>
+
+<!-- CSS Variables panel -->
+<div class="css-panel" id="css-panel">
+  <div class="css-panel-header">
+    <span>CSS Custom Properties</span>
+    <button class="copy-btn" id="copy-btn">Copy</button>
+  </div>
+  <pre id="css-code"></pre>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">Copied to clipboard!</div>
+
+<script>
+  const tokens = {
+    yellow: [
+      { step: 50,  hex: '#FFF359', oklch: 'oklch(0.970 0.17 95)' },
+      { step: 100, hex: '#FFDC3A', oklch: 'oklch(0.907 0.17 95)' },
+      { step: 150, hex: '#EAC503', oklch: 'oklch(0.843 0.17 95)' },
+      { step: 200, hex: '#D3AE00', oklch: 'oklch(0.780 0.17 95)' },
+      { step: 250, hex: '#BD9800', oklch: 'oklch(0.716 0.17 95)' },
+      { step: 300, hex: '#A78200', oklch: 'oklch(0.652 0.17 95)' },
+      { step: 350, hex: '#916D00', oklch: 'oklch(0.589 0.17 95)' },
+      { step: 400, hex: '#7C5800', oklch: 'oklch(0.525 0.17 95)' },
+      { step: 450, hex: '#684400', oklch: 'oklch(0.461 0.17 95)' },
+      { step: 500, hex: '#543000', oklch: 'oklch(0.398 0.17 95)' },
+      { step: 550, hex: '#411C00', oklch: 'oklch(0.334 0.17 95)' },
+      { step: 600, hex: '#2E0800', oklch: 'oklch(0.270 0.17 95)' },
+    ],
+    green: [
+      { step: 50,  hex: '#A1FFA7', oklch: 'oklch(0.970 0.18 145)' },
+      { step: 100, hex: '#8AFD90', oklch: 'oklch(0.907 0.18 145)' },
+      { step: 150, hex: '#72E57A', oklch: 'oklch(0.843 0.18 145)' },
+      { step: 200, hex: '#5ACE63', oklch: 'oklch(0.780 0.18 145)' },
+      { step: 250, hex: '#41B74D', oklch: 'oklch(0.716 0.18 145)' },
+      { step: 300, hex: '#23A136', oklch: 'oklch(0.652 0.18 145)' },
+      { step: 350, hex: '#008B1D', oklch: 'oklch(0.589 0.18 145)' },
+      { step: 400, hex: '#007500', oklch: 'oklch(0.525 0.18 145)' },
+      { step: 450, hex: '#006000', oklch: 'oklch(0.461 0.18 145)' },
+      { step: 500, hex: '#004C00', oklch: 'oklch(0.398 0.18 145)' },
+      { step: 550, hex: '#003800', oklch: 'oklch(0.334 0.18 145)' },
+      { step: 600, hex: '#002400', oklch: 'oklch(0.270 0.18 145)' },
+    ]
+  };
+
+  function textColor(hex) {
+    const r = parseInt(hex.slice(1,3),16)/255;
+    const g = parseInt(hex.slice(3,5),16)/255;
+    const b = parseInt(hex.slice(5,7),16)/255;
+    const toLinear = c => c <= 0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
+    const lum = 0.2126*toLinear(r) + 0.7152*toLinear(g) + 0.0722*toLinear(b);
+    return lum > 0.35 ? '#1a1a1a' : '#ffffff';
+  }
+
+  function renderSwatches(group, containerId) {
+    const container = document.getElementById(containerId);
+    tokens[group].forEach(t => {
+      const div = document.createElement('div');
+      div.className = 'swatch';
+      div.setAttribute('role', 'button');
+      div.setAttribute('tabindex', '0');
+      div.setAttribute('aria-label', `Copy color ${t.hex} — ${group} ${t.step}`);
+
+      const colorDiv = document.createElement('div');
+      colorDiv.className = 'swatch-color';
+      colorDiv.style.background = t.hex;
+
+      const info = document.createElement('div');
+      info.className = 'swatch-info';
+      const step = document.createElement('span');
+      step.className = 'swatch-step';
+      step.textContent = t.step;
+      const hex = document.createElement('span');
+      hex.className = 'swatch-hex';
+      hex.textContent = t.hex;
+      const oklch = document.createElement('span');
+      oklch.className = 'swatch-oklch';
+      oklch.textContent = t.oklch.replace('oklch(','').replace(')','');
+      info.append(step, hex, oklch);
+
+      div.append(colorDiv, info);
+
+      const copyColor = () => {
+        navigator.clipboard.writeText(t.hex)
+          .then(() => showToast(`Copied ${t.hex}`))
+          .catch(() => showToast(`Could not copy — use ${t.hex}`));
+      };
+      div.addEventListener('click', copyColor);
+      div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyColor(); } });
+      container.appendChild(div);
+    });
+  }
+
+  renderSwatches('yellow', 'yellow-swatches');
+  renderSwatches('green',  'green-swatches');
+
+  // Build CSS code block
+  function buildCSS() {
+    const lines = [':root {'];
+    lines.push('  /* Yellow — OKLCH(L, 0.17, 95°) */');
+    tokens.yellow.forEach(t => lines.push(`  --yellow-${t.step}: ${t.hex}; /* ${t.oklch} */`));
+    lines.push('');
+    lines.push('  /* Green — OKLCH(L, 0.18, 145°) */');
+    tokens.green.forEach(t => lines.push(`  --green-${t.step}: ${t.hex}; /* ${t.oklch} */`));
+    lines.push('}');
+    return lines.join('\n');
+  }
+
+  function syntaxHighlight(css) {
+    return css
+      .replace(/(:root)/g, '<span class="token-selector">$1</span>')
+      .replace(/(--[\w-]+)/g, '<span class="token-prop">$1</span>')
+      .replace(/(#[0-9A-Fa-f]{6})/g, '<span class="token-value">$1</span>')
+      .replace(/(\/\*.*?\*\/)/g, '<span class="token-comment">$1</span>');
+  }
+
+  const cssText = buildCSS();
+  document.getElementById('css-code').innerHTML = syntaxHighlight(cssText);
+
+  function copyCSS() {
+    navigator.clipboard.writeText(cssText)
+      .then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        showToast('CSS variables copied!');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      })
+      .catch(() => showToast('Could not copy to clipboard'));
+  }
+
+  document.getElementById('copy-btn').addEventListener('click', copyCSS);
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+</body>
+</html>

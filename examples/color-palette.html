@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brand Colors — Mozzarella Hacendado</title>
+  <style>
+    /* ── CSS Custom Properties — brand-colors ── */
+    :root {
+      /* Blue */
+      --blue-50:  #EEF2FB;
+      --blue-100: #D5E0F5;
+      --blue-150: #BBCDEF;
+      --blue-200: #9FBBE8;
+      --blue-250: #82A8E0;
+      --blue-300: #6494D7;
+      --blue-350: #4680CC;
+      --blue-400: #2D6BBF;
+      --blue-450: #1B56AE;
+      --blue-500: #144292;
+      --blue-550: #0E3076;
+      --blue-600: #091F52;
+
+      /* Red */
+      --red-50:  #FDF0EE;
+      --red-100: #F9D9D5;
+      --red-150: #F4BFBA;
+      --red-200: #EEA39D;
+      --red-250: #E78680;
+      --red-300: #DE6760;
+      --red-350: #D44740;
+      --red-400: #C82B22;
+      --red-450: #B81E16;
+      --red-500: #A0140D;
+      --red-550: #840A06;
+      --red-600: #620300;
+
+      /* Neutral */
+      --neutral-50:  #F9F8F6;
+      --neutral-100: #F2F1EE;
+      --neutral-150: #EBEAE6;
+      --neutral-200: #E4E2DD;
+      --neutral-250: #DDDAD4;
+      --neutral-300: #D5D2CB;
+      --neutral-350: #CCCAC1;
+      --neutral-400: #C3C0B7;
+      --neutral-450: #B9B6AC;
+      --neutral-500: #AEAB9F;
+      --neutral-550: #A29F92;
+      --neutral-600: #938F82;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--neutral-50);
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding: 48px 32px;
+    }
+
+    header {
+      max-width: 1100px;
+      margin: 0 auto 56px;
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      border-bottom: 1px solid var(--neutral-200);
+      padding-bottom: 32px;
+    }
+
+    .source-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .source-img {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--neutral-200);
+    }
+
+    .source-meta h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .source-meta p {
+      font-size: 13px;
+      color: var(--neutral-500);
+      margin-top: 4px;
+    }
+
+    .tag {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--blue-450);
+      background: var(--blue-50);
+      border: 1px solid var(--blue-100);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .ramp-section {}
+
+    .ramp-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .ramp-name {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .ramp-desc {
+      font-size: 13px;
+      color: var(--neutral-500);
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 6px;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .swatch-color {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.06);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: default;
+    }
+
+    .swatch-color:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .swatch-step {
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      text-align: center;
+    }
+
+    .swatch-hex {
+      font-size: 9px;
+      color: var(--neutral-500);
+      text-align: center;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+
+    .css-block {
+      margin-top: 56px;
+      background: #1e1e2e;
+      border-radius: 16px;
+      padding: 32px 36px;
+      overflow-x: auto;
+    }
+
+    .css-block h2 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6c7086;
+      margin-bottom: 20px;
+    }
+
+    .css-block pre {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #cdd6f4;
+      white-space: pre;
+    }
+
+    .css-block .token-comment { color: #6c7086; }
+    .css-block .token-prop    { color: #89b4fa; }
+    .css-block .token-value   { color: #a6e3a1; }
+    .css-block .token-punct   { color: #cdd6f4; }
+
+    footer {
+      max-width: 1100px;
+      margin: 56px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--neutral-200);
+      font-size: 12px;
+      color: var(--neutral-500);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="source-badge">
+    <div class="source-meta">
+      <h1>Brand Colors — Mozzarella Hacendado</h1>
+      <p>Extraído de packaging · 3 rampas OKLCH · 36 tokens · colección <code>brand-colors</code></p>
+    </div>
+  </div>
+  <span class="tag">Figma Color Extractor</span>
+</header>
+
+<main>
+
+  <!-- ── BLUE ── -->
+  <section class="ramp-section">
+    <div class="ramp-header">
+      <span class="ramp-name">Blue</span>
+      <span class="ramp-desc">Azul corporativo Hacendado · OKLCH C=0.148 H=264.5°</span>
+    </div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-50)"></div><div class="swatch-step">50</div><div class="swatch-hex">#EEF2FB</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-100)"></div><div class="swatch-step">100</div><div class="swatch-hex">#D5E0F5</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-150)"></div><div class="swatch-step">150</div><div class="swatch-hex">#BBCDEF</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-200)"></div><div class="swatch-step">200</div><div class="swatch-hex">#9FBBE8</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-250)"></div><div class="swatch-step">250</div><div class="swatch-hex">#82A8E0</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-300)"></div><div class="swatch-step">300</div><div class="swatch-hex">#6494D7</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-350)"></div><div class="swatch-step">350</div><div class="swatch-hex">#4680CC</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-400)"></div><div class="swatch-step">400</div><div class="swatch-hex">#2D6BBF</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-450)"></div><div class="swatch-step">450</div><div class="swatch-hex">#1B56AE</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-500)"></div><div class="swatch-step">500</div><div class="swatch-hex">#144292</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-550)"></div><div class="swatch-step">550</div><div class="swatch-hex">#0E3076</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--blue-600)"></div><div class="swatch-step">600</div><div class="swatch-hex">#091F52</div></div>
+    </div>
+  </section>
+
+  <!-- ── RED ── -->
+  <section class="ramp-section">
+    <div class="ramp-header">
+      <span class="ramp-name">Red</span>
+      <span class="ramp-desc">Rojo tomate · OKLCH C=0.185 H=27.8°</span>
+    </div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-50)"></div><div class="swatch-step">50</div><div class="swatch-hex">#FDF0EE</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-100)"></div><div class="swatch-step">100</div><div class="swatch-hex">#F9D9D5</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-150)"></div><div class="swatch-step">150</div><div class="swatch-hex">#F4BFBA</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-200)"></div><div class="swatch-step">200</div><div class="swatch-hex">#EEA39D</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-250)"></div><div class="swatch-step">250</div><div class="swatch-hex">#E78680</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-300)"></div><div class="swatch-step">300</div><div class="swatch-hex">#DE6760</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-350)"></div><div class="swatch-step">350</div><div class="swatch-hex">#D44740</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-400)"></div><div class="swatch-step">400</div><div class="swatch-hex">#C82B22</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-450)"></div><div class="swatch-step">450</div><div class="swatch-hex">#B81E16</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-500)"></div><div class="swatch-step">500</div><div class="swatch-hex">#A0140D</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-550)"></div><div class="swatch-step">550</div><div class="swatch-hex">#840A06</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--red-600)"></div><div class="swatch-step">600</div><div class="swatch-hex">#620300</div></div>
+    </div>
+  </section>
+
+  <!-- ── NEUTRAL ── -->
+  <section class="ramp-section">
+    <div class="ramp-header">
+      <span class="ramp-name">Neutral</span>
+      <span class="ramp-desc">Blanco packaging · OKLCH C=0.012 H=87.0°</span>
+    </div>
+    <div class="swatches">
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-50)"></div><div class="swatch-step">50</div><div class="swatch-hex">#F9F8F6</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-100)"></div><div class="swatch-step">100</div><div class="swatch-hex">#F2F1EE</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-150)"></div><div class="swatch-step">150</div><div class="swatch-hex">#EBEAE6</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-200)"></div><div class="swatch-step">200</div><div class="swatch-hex">#E4E2DD</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-250)"></div><div class="swatch-step">250</div><div class="swatch-hex">#DDDAD4</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-300)"></div><div class="swatch-step">300</div><div class="swatch-hex">#D5D2CB</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-350)"></div><div class="swatch-step">350</div><div class="swatch-hex">#CCCAC1</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-400)"></div><div class="swatch-step">400</div><div class="swatch-hex">#C3C0B7</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-450)"></div><div class="swatch-step">450</div><div class="swatch-hex">#B9B6AC</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-500)"></div><div class="swatch-step">500</div><div class="swatch-hex">#AEAB9F</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-550)"></div><div class="swatch-step">550</div><div class="swatch-hex">#A29F92</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:var(--neutral-600)"></div><div class="swatch-step">600</div><div class="swatch-hex">#938F82</div></div>
+    </div>
+  </section>
+
+  <!-- ── CSS Block ── -->
+  <div class="css-block">
+    <h2>CSS Custom Properties</h2>
+    <pre><span class="token-punct">:root {</span>
+  <span class="token-comment">/* Blue — Azul corporativo Hacendado */</span>
+  <span class="token-prop">--blue-50</span><span class="token-punct">:</span>  <span class="token-value">#EEF2FB</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-100</span><span class="token-punct">:</span> <span class="token-value">#D5E0F5</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-150</span><span class="token-punct">:</span> <span class="token-value">#BBCDEF</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-200</span><span class="token-punct">:</span> <span class="token-value">#9FBBE8</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-250</span><span class="token-punct">:</span> <span class="token-value">#82A8E0</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-300</span><span class="token-punct">:</span> <span class="token-value">#6494D7</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-350</span><span class="token-punct">:</span> <span class="token-value">#4680CC</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-400</span><span class="token-punct">:</span> <span class="token-value">#2D6BBF</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-450</span><span class="token-punct">:</span> <span class="token-value">#1B56AE</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-500</span><span class="token-punct">:</span> <span class="token-value">#144292</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-550</span><span class="token-punct">:</span> <span class="token-value">#0E3076</span><span class="token-punct">;</span>
+  <span class="token-prop">--blue-600</span><span class="token-punct">:</span> <span class="token-value">#091F52</span><span class="token-punct">;</span>
+
+  <span class="token-comment">/* Red — Rojo tomate */</span>
+  <span class="token-prop">--red-50</span><span class="token-punct">:</span>  <span class="token-value">#FDF0EE</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-100</span><span class="token-punct">:</span> <span class="token-value">#F9D9D5</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-150</span><span class="token-punct">:</span> <span class="token-value">#F4BFBA</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-200</span><span class="token-punct">:</span> <span class="token-value">#EEA39D</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-250</span><span class="token-punct">:</span> <span class="token-value">#E78680</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-300</span><span class="token-punct">:</span> <span class="token-value">#DE6760</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-350</span><span class="token-punct">:</span> <span class="token-value">#D44740</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-400</span><span class="token-punct">:</span> <span class="token-value">#C82B22</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-450</span><span class="token-punct">:</span> <span class="token-value">#B81E16</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-500</span><span class="token-punct">:</span> <span class="token-value">#A0140D</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-550</span><span class="token-punct">:</span> <span class="token-value">#840A06</span><span class="token-punct">;</span>
+  <span class="token-prop">--red-600</span><span class="token-punct">:</span> <span class="token-value">#620300</span><span class="token-punct">;</span>
+
+  <span class="token-comment">/* Neutral — Blanco packaging */</span>
+  <span class="token-prop">--neutral-50</span><span class="token-punct">:</span>  <span class="token-value">#F9F8F6</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-100</span><span class="token-punct">:</span> <span class="token-value">#F2F1EE</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-150</span><span class="token-punct">:</span> <span class="token-value">#EBEAE6</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-200</span><span class="token-punct">:</span> <span class="token-value">#E4E2DD</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-250</span><span class="token-punct">:</span> <span class="token-value">#DDDAD4</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-300</span><span class="token-punct">:</span> <span class="token-value">#D5D2CB</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-350</span><span class="token-punct">:</span> <span class="token-value">#CCCAC1</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-400</span><span class="token-punct">:</span> <span class="token-value">#C3C0B7</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-450</span><span class="token-punct">:</span> <span class="token-value">#B9B6AC</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-500</span><span class="token-punct">:</span> <span class="token-value">#AEAB9F</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-550</span><span class="token-punct">:</span> <span class="token-value">#A29F92</span><span class="token-punct">;</span>
+  <span class="token-prop">--neutral-600</span><span class="token-punct">:</span> <span class="token-value">#938F82</span><span class="token-punct">;</span>
+<span class="token-punct">}</span></pre>
+  </div>
+
+</main>
+
+<footer>
+  <span>Generado por Figma Color Extractor · Skill OKLCH</span>
+  <span>Fuente: Mozzarella fresca Hacendado · Feb 2026</span>
+</footer>
+
+</body>
+</html>

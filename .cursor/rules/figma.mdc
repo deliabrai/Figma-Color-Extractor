@@ -1,0 +1,60 @@
+---
+description: Reglas específicas para operaciones con Figma en este proyecto. Se aplican cuando el usuario menciona Figma, proporciona URLs de Figma, o cuando se trabaja con variables, colores o componentes de Figma.
+globs: []
+alwaysApply: false
+---
+
+# Reglas Figma — figma-color-extractor
+
+## MCP exclusivo de este proyecto
+
+Este proyecto usa su propio servidor `project-figma-console` definido en `.cursor/mcp.json`.
+
+```
+project-figma-console  →  escritura en Figma Desktop (WebSocket)
+user-figma-remote      →  lectura via API REST de Figma
+```
+
+## Antes de cualquier operación en Figma
+
+1. Verificar conexión: `project-figma-console › figma_get_status`
+2. Si el status muestra puertos ocupados: matar procesos con `lsof -ti :9223-9232 | xargs kill -9`
+3. Navegar a la página correcta con `figma_execute` + `figma.setCurrentPageAsync`
+
+## Extracción de URL de Figma
+
+De `https://figma.com/design/:fileKey/:name?node-id=:nodeId`:
+- `fileKey` = segmento tras `/design/`
+- `nodeId` = valor de `node-id`, convirtiendo `-` en `:`
+
+## Variables en Figma
+
+- Colección: `brand-colors` (siempre este nombre en este proyecto)
+- Modo: `Value` (un solo modo)
+- Usar `figma_setup_design_tokens` para crear colección + tokens en una sola llamada
+- Máximo 100 tokens por llamada
+
+## Swatches en canvas
+
+- Tamaño: 140×140px, corner radius: 0px, gap: 4px entre swatches
+- Separación entre rampas: 48px vertical
+- Posición inicial: x=100, y=100
+- Siempre vincular el fill del rectángulo a la variable con `figma.variables.setBoundVariableForPaint`
+- Agrupar cada rampa en un `FRAME` nombrado `Color Ramp / <nombre>`
+
+## Validación obligatoria
+
+Después de crear swatches, capturar screenshot con:
+```
+project-figma-console › figma_capture_screenshot
+```
+Si el resultado no es visualmente correcto, corregir antes de continuar.
+
+## Errores comunes
+
+| Error | Causa | Solución |
+|---|---|---|
+| `EADDRINUSE` en puertos 9223-9232 | Instancias previas del MCP | `lsof -ti :9223-9232 \| xargs kill -9` |
+| `403 Token expired` | Token de Figma caducado | Regenerar en figma.com/settings y actualizar `.cursor/mcp.json` |
+| `Cannot call with documentAccess: dynamic-page` | Usar API síncrona | Añadir `Async` al método (ej. `getNodeByIdAsync`) |
+| `Component set has existing errors` | Variantes con nombres duplicados | Verificar nombres únicos antes de `combineAsVariants` |

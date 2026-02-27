@@ -1,0 +1,38 @@
+---
+description: Reglas globales del proyecto figma-color-extractor. Se aplican siempre en este workspace.
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Proyecto: Figma Color Extractor
+
+Ejercicio didáctico que demuestra la colaboración entre **Agents**, **MCPs** y **Skills**.
+
+## Contexto del proyecto
+
+Este proyecto extrae los 3 colores dominantes de un screenshot, genera rampas OKLCH de 12 pasos en Figma (variables + swatches visuales) y produce una página web con las CSS custom properties.
+
+## Reglas obligatorias
+
+### MCP a usar
+- **SIEMPRE** usa el MCP `project-figma-console` (definido en `.cursor/mcp.json`) para operaciones de escritura en Figma.
+- **NUNCA** uses el MCP global `figma-console` ni `user-figma-console` en este proyecto — están contaminados con otras sesiones.
+- Para lectura de Figma (get_design_context, get_screenshot) usa `user-figma-remote`.
+
+### Skill a seguir
+- Cuando el usuario proporcione una URL de Figma + un screenshot, activa automáticamente la skill `.cursor/skills/figma-color-extractor/SKILL.md`.
+- Sigue los 7 pasos en orden. No te saltes la validación visual del paso 7.
+
+### Nomenclatura de tokens
+- Usa el nombre real del color detectado, no `primary/secondary/tertiary`.
+- Formato: `<color-name>/<step>` → ej. `blue/50`, `coral/300`, `slate/600`.
+- Colección Figma: siempre llamada `brand-colors` en este proyecto.
+
+### Archivos de salida
+- La página web se llama siempre `color-palette.html` en la raíz del proyecto.
+- Añádele un número que identifique el nuevo archivo y que sea consecutivo.
+- No crear subdirectorios para los outputs — todo en la raíz.
+
+### Comunicación con el usuario
+- Tras cada paso de Figma, confirma brevemente qué se ha creado.
+- Si un paso falla, explica qué capa falló (Agent / MCP / Skill) y por qué — esto es parte del ejercicio didáctico.

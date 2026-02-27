@@ -1,0 +1,56 @@
+---
+description: Reglas de conversión de color OKLCH para este proyecto. Se aplican cuando se generan rampas de color, se extraen colores de imágenes, o se crean variables de color.
+globs: ["color-palette.html", "**/*.css"]
+alwaysApply: false
+---
+
+# Reglas OKLCH — figma-color-extractor
+
+## Extracción de colores del screenshot
+
+1. Identificar los **3 colores más representativos** de la imagen:
+   - Color 1: el más dominante / de marca (suele ser el más saturado)
+   - Color 2: color de acento o fondo principal
+   - Color 3: color de texto o neutro (gris, oscuro, o complementario)
+
+2. Para cada color, obtener el hex aproximado más cercano al color "puro" del tono (no el más claro ni más oscuro que aparezca, sino el tono medio representativo).
+
+## Conversión hex → parámetros OKLCH
+
+Usar la función `hexToOklchApprox` de `.cursor/skills/figma-color-extractor/scripts/oklch.js`:
+
+```js
+// Devuelve { L, C, H }
+const { C, H } = hexToOklchApprox('#3B82F6');
+// Usar C y H para generar la rampa; ignorar L (se recalcula por pasos)
+```
+
+## Generación de rampas
+
+- **12 pasos** por rampa, numerados: 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600
+- Fórmula de luminosidad: `L = 0.97 - (i / 11) * 0.77` donde `i` va de 0 a 11
+- Paso 50 = más claro (L≈0.97), Paso 600 = más oscuro (L≈0.20)
+- Mantener C y H constantes en toda la rampa
+
+## CSS Custom Properties
+
+Formato de salida:
+
+```css
+:root {
+  /* Blue — oklch(L 0.18 264) */
+  --blue-50:  #EFF6FF;
+  --blue-100: #DBEAFE;
+  /* ... */
+  --blue-600: #1E3A5F;
+}
+```
+
+## Valores OKLCH en CSS modernos
+
+Incluir también los valores OKLCH nativos como comentario en cada variable:
+```css
+--blue-300: #60A5FA; /* oklch(0.716 0.18 264) */
+```
+
+Los navegadores modernos (Chrome 111+, Firefox 113+, Safari 15.4+) soportan `oklch()` directamente en CSS.
