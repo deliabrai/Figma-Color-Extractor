@@ -2,6 +2,8 @@
 
 Ejercicio didáctico que demuestra la colaboración entre **Agents**, **MCPs** y **Skills** en Cursor.
 
+### 🔗 [Ver diagrama del flujo en vivo →](https://figma-color-extractor-flow.vercel.app)
+
 ---
 
 ## Cómo usar
