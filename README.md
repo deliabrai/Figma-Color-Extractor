@@ -35,6 +35,7 @@ Ejercicio didáctico que demuestra la colaboración entre **Agents**, **MCPs** y
 │
 └── .cursor/
     ├── mcp.json                       ← MCP aislado (excluido del repo, ver .gitignore)
+    ├── mcp.json.example               ← Plantilla sin token (sí versionada); copiar a mcp.json
     │
     ├── rules/
     │   ├── project.mdc                ← Reglas globales del proyecto
@@ -96,7 +97,7 @@ El MCP `project-figma-console` está definido **solo en este proyecto** para:
 - Tener un nombre específico (`project-figma-console`) que las rules y el agente referencian explícitamente
 - Aislar el token y la configuración del proyecto
 
-> `mcp.json` está en `.gitignore` y no se sube al repo. Al clonar, créalo manualmente en `.cursor/mcp.json` con esta estructura:
+> `mcp.json` está en `.gitignore` y no se sube al repo. Al clonar, copia `.cursor/mcp.json.example` a `.cursor/mcp.json` y sustituye `TU_TOKEN_AQUI`, o créalo con esta estructura:
 > ```json
 > {
 >   "mcpServers": {
